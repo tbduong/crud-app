@@ -1,24 +1,21 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const morgan = require('morgan');
 const app = express(); //Initialize app variable as express application
 const bodyparser = require('body-parser');
+const appRoutes = require('./server/routes/appRoutes');
+const mongoose = require('mongoose');
 
-dotenv.config({path: 'config.env'})
 const PORT = process.env.PORT || 8080  //if value of this PORT value from env file is not available, point to port 8080
 //nodemon server.js
 
-//log requests on console whenever we make a request
-app.use(morgan('tiny'));
+mongoose.connect('mongodb://localhost/meanDb', { useMongoClient: true });
 
-//parse request to body-parser
-app.use(bodyparser.urlencoded({ extended: true}));
-
-//set view engine
-
-
+//ROOT
 app.get('/', (req, res) => {
     res.send("Crud Application Initialized");
 })
+
+//Call on routing from appRoutes file
+app.use('/', appRoutes);
 
 app.listen(PORT, () => {console.log(`Server is running on ${PORT}`)});
